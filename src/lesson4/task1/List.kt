@@ -245,4 +245,44 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    val raz: MutableList<Int> = mutableListOf()
+    val res: MutableList<String> = mutableListOf()
+    val ed: List<String> = listOf("", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять", "десять", "одинадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать")
+    val de: List<String> = listOf("", "", "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
+    val so: List<String> = listOf("", "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
+    val tys: List<String> = listOf("тысяч", "одна тысяча", "две тысячи", "три тысячи", "четыре тысячи", "пять тысяч", "шесть тысяч", "семь тысяч", "восемь тысяч", "девять тысяч")
+    //разложение на числа
+    var temp = n
+    var st = 100000
+    for (i in 1..6) {
+        raz.add(temp / st)
+        temp %= st
+        st /= 10
+    }
+    //тысячи
+    if (raz[0] > 0 || raz[1] > 0 || raz[2] > 0) {
+        if (raz[0] > 0) res.add(so[raz[0]])
+        when (raz[1]) {
+            1 -> {
+                res.add(ed[raz[1] * 10 + raz[2]])
+                res.add(tys[0])
+            }
+            0 -> res.add(tys[raz[2]])
+            else -> {
+                res.add(de[raz[1]])
+                res.add(tys[raz[2]])
+            }
+        }
+    }
+    //единицы
+    if (raz[3] > 0 || raz[4] > 0 || raz[5] > 0) {
+        if (raz[3] > 0) res.add(so[raz[3]])
+        if (raz[4] < 2) res.add(ed[raz[4] * 10 + raz[5]])
+        else {
+            res.add(de[raz[4]])
+            if (raz[5] > 0) res.add(ed[raz[5]])
+        }
+    }
+    return res.joinToString(separator = " ")
+}
