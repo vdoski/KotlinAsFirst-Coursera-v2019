@@ -69,7 +69,41 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val mole = listOf(0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+    val molevys = listOf(0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+    val parts = str.split(" ")
+    val mo: List<String> = listOf(
+        "января", "февраля", "марта", "апреля", "мая", "июня", "июля",
+        "августа", "сентября", "октября", "ноября", "декабря"
+    )
+    var vys = false
+    if (parts.size != 3) return ""
+    for (tmpmo in mo) {
+        if (tmpmo == parts[1]) {
+            if (
+                (parts[2].toInt() % 4 == 0 && parts[2].toInt() % 100 != 0) ||
+                (parts[2].toInt() % 4 == 0 && parts[2].toInt() % 100 == 0 && parts[2].toInt() % 400 == 0)
+            ) vys = true
+            if (vys) {
+                if (parts[0].toInt() in 1..molevys[mo.indexOf(tmpmo) + 1]) return String.format(
+                    "%02d.%02d.%s",
+                    parts[0].toInt(),
+                    mo.indexOf(tmpmo) + 1,
+                    parts[2]
+                )
+            } else {
+                if (parts[0].toInt() in 1..mole[mo.indexOf(tmpmo) + 1]) return String.format(
+                    "%02d.%02d.%s",
+                    parts[0].toInt(),
+                    mo.indexOf(tmpmo) + 1,
+                    parts[2]
+                )
+            }
+        }
+    }
+    return ""
+}
 
 /**
  * Средняя
@@ -81,7 +115,47 @@ fun dateStrToDigit(str: String): String = TODO()
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val mole = listOf(0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+    val molevys = listOf(0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+    val parts = digital.split(".")
+    val mo: List<String> = listOf(
+        "января", "февраля", "марта", "апреля", "мая", "июня", "июля",
+        "августа", "сентября", "октября", "ноября", "декабря"
+    )
+    var vys = false
+    if (parts.size != 3) return ""
+    for (i in 0..2) try {
+        parts[i].toInt()
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+    for (tmpmo in 1..12) {
+        if (tmpmo == parts[1].toInt()) {
+            if (
+                (parts[2].toInt() % 4 == 0 && parts[2].toInt() % 100 != 0) ||
+                (parts[2].toInt() % 4 == 0 && parts[2].toInt() % 100 == 0 && parts[2].toInt() % 400 == 0)
+            ) vys = true
+            if (vys) {
+                if (parts[0].toInt() in 1..molevys[tmpmo]) return String.format(
+                    "%d %s %s",
+                    parts[0].toInt(),
+                    mo[tmpmo - 1],
+                    parts[2]
+                )
+            } else {
+                if (parts[0].toInt() in 1..mole[tmpmo]) return String.format(
+                    "%d %s %s",
+                    parts[0].toInt(),
+                    mo[tmpmo - 1],
+                    parts[2]
+                )
+            }
+        }
+    }
+    return ""
+}
+
 
 /**
  * Средняя
